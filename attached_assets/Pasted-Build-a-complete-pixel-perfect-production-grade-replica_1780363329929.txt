@@ -1,0 +1,66 @@
+Build a complete, pixel-perfect, production-grade replica of Discord named DisClone. It must be a fullstack application that works identically across Web (desktop browser), Desktop (PC via Tauri/Electron wrapper ready), and Mobile (fully responsive + installable PWA with native-like feel). Do not make it mobile-only.
+
+VISUAL & UI FIDELITY (match current 2026 Discord exactly):
+Dark theme default with "Crimson Moon" accent colors, exact blur effects, shadows, rounded corners, hover states, and animations.
+Left sidebar: Server/Guild icons in a vertical list with folders support, unread indicators (white pill + red mention count), DMs folder, Nitro promotions.
+Server view: Channel list (text, voice, stage, forum, categories with collapse), member list on right with roles, status indicators.
+Message area: Exact message bubbles, timestamps, avatars, replies threading, editing (pencil icon), deleting, reactions (with counters and emoji picker), embeds, attachments with previews (images, videos, files), code blocks with syntax highlighting, spoilers, markdown full support.
+Top bar: Server name, channel topic, search, voice/video call buttons, member count.
+Bottom message input: Exact Discord bar with emoji, gif, attachment, @mention, slash commands autocomplete.
+Full settings panel that matches every Discord tab: My Account, Privacy & Safety, Authorized Apps, Connections, Nitro, Voice & Video, Text & Images, Notifications, Appearance (themes, fonts, saturation), Accessibility, Language, Advanced, Developer, etc.
+Include Kettu plugin section, Themes, Fonts, Addon Browser, Plugin Browser exactly as shown in screenshots.
+
+CORE FEATURES (implement all):
+Authentication: Register/Login with email, username#discriminator, password. Support Discord OAuth simulation, 2FA (TOTP), password reset, device management.
+Real-time: WebSockets (Socket.io preferred) for live messages, typing indicators ("Biscuit is typing..."), online/offline/presence (Online, Idle,
+Do Not Disturb, Invisible), custom status with emojis.
+Servers & Communities: Create/join/leave servers, server discovery, invites with expiration & usage limits, vanity URLs, server boosts (simulated Nitro levels), verification levels, explicit content filter.
+Channels: Text, Voice (WebRTC with multi-user support), Stage channels, Forum channels, Announcement channels, Categories. Channel permissions per role.
+Roles & Permissions: Full role system with color, hoist, mentionable, admin, manage channels, kick/ban, etc.
+Messaging: DMs, Group DMs, pinned messages, threads, slowmode, auto-mod simulation, message history, edit/delete history for mods.
+Voice & Video: Full WebRTC voice channels (push-to-talk, voice activity, noise suppression stub), video, screen sharing, Go Live streaming simulation, soundboard.
+Friends & Social: Add friend by username#tag, friend requests (incoming/outgoing), blocking, close friends list.
+Nitro & Monetization: Simulated Nitro shop, custom emojis/stickers upload, animated avatars, banner, higher file upload (8MB -> 100MB+), server boosts with perks.
+File Uploads: Drag & drop, image compression preview, video playback, PDF/docs preview.
+Search: Global + server search with filters (messages, files, links).
+Notifications: Server mute, channel mute, mention-only, desktop + in-app notifications, notification sounds.
+Accessibility & Customization: Full keyboard shortcuts (Ctrl+K command palette, arrow navigation, etc.), high contrast mode, font scaling, reduced motion.
+Developer Tools: Built-in console/logs viewer, client info, cache actions, advanced settings as in screenshots.
+Mobile Experience: Bottom navigation bar (Home, Discover, Create, Inbox, You), swipe between servers, native PWA install prompt, touch-friendly inputs.
+Extra Polish: Activity status (playing Roblox, listening Spotify), rich presence, integrations simulation, message reactions with burst animations.
+
+TECH STACK & IMPLEMENTATION DETAILS:
+Fron
+tend: Next.js 15+ App Router + React 19, TailwindCSS + shadcn/ui + Radix primitives + Framer Motion for animations. Zustand or Redux for state. TypeScript strict.
+Backend: Next.js API routes or separate Express server. Socket.io for realtime.
+Database: Supabase (Postgres + Realtime) or MongoDB + Mongoose. Full schema: users, sessions, servers, channels, messages (with replies/threads), members, roles, invites, friendships, notifications.
+Auth: NextAuth.js or custom JWT + HTTP-only refresh tokens, bcrypt, rate limiting (express-rate-limit).
+Storage: Uploadthing or Supabase Storage for files/avatars/emojis.
+WebRTC: Simple-peer or Mediasoup for voice/video (multi-user ready).
+Security: Input sanitization (DOMPurify), rate limits everywhere, CSRF protection, helmet.js, proper CORS, no XSS/SQLi.
+Performance: Infinite scrolling for messages, virtualized lists (react-window), optimistic updates, message caching.
+Demo Data: Pre-populate with servers like "OmniVoid", "HIGHST POWER", Roblox script sharing channels, users like @b8u5, @codethan, messages exactly matching the provided screenshots about Lua scripts, laumor, executors, support tickets, etc.
+
+Additional Requirements:
+Make it indistinguishable from real Discord. Provide a toggle for "Exact Replica Mode".
+Include built-in plugin/theme loader system (Kettu style).
+Responsive on all screen sizes + Electron/Tauri ready export scripts.
+Full mobile PWA manifest with splash screens.
+Seeded database with realistic chat history from the uploaded images.
+Admin panel for moderation simulation.
+Rate limiting, anti-spam, basic anti-cheat simulation for script sharing.
+Deployment: Full Replit deployment guide, environment variables, Dockerfile for self-host.
+
+Project Structure:
+Generate complete folder structure first, then implement core (auth + chat + realtime) → voice → full features iteratively with clear comments.
+
+Output:
+Full project initialization commands.
+Step-by-step implementation
+plan.
+All necessary code files.
+How to run locally and deploy.
+
+Name: DisClone
+Tagline: "Your own Discord — but better for script sharing and private communities."
+Start building now

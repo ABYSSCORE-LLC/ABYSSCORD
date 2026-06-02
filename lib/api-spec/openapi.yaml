@@ -1,22 +1,41 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: DisClone API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication operations
+  - name: users
+    description: User operations
+  - name: servers
+    description: Server/guild operations
+  - name: channels
+    description: Channel operations
+  - name: messages
+    description: Message operations
+  - name: members
+    description: Member operations
+  - name: roles
+    description: Role operations
+  - name: dms
+    description: Direct message operations
+  - name: friends
+    description: Friend operations
+  - name: invites
+    description: Invite operations
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +43,1117 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ─── AUTH ────────────────────────────────────────────────────────────────────
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/me/update:
+    patch:
+      operationId: updateMe
+      tags: [auth]
+      summary: Update current user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /auth/me/status:
+    patch:
+      operationId: updateMyStatus
+      tags: [auth]
+      summary: Update presence status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StatusUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  # ─── USERS ───────────────────────────────────────────────────────────────────
+  /users/{userId}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get user profile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  # ─── SERVERS ─────────────────────────────────────────────────────────────────
+  /servers:
+    get:
+      operationId: listMyServers
+      tags: [servers]
+      summary: List servers the current user belongs to
+      responses:
+        "200":
+          description: List of servers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Server"
+    post:
+      operationId: createServer
+      tags: [servers]
+      summary: Create a new server
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServerInput"
+      responses:
+        "201":
+          description: Created server
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Server"
+
+  /servers/discover:
+    get:
+      operationId: discoverServers
+      tags: [servers]
+      summary: Discover public servers
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Public servers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Server"
+
+  /servers/{serverId}:
+    get:
+      operationId: getServer
+      tags: [servers]
+      summary: Get server details
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Server details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerDetail"
+    patch:
+      operationId: updateServer
+      tags: [servers]
+      summary: Update server settings
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServerUpdate"
+      responses:
+        "200":
+          description: Updated server
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Server"
+    delete:
+      operationId: deleteServer
+      tags: [servers]
+      summary: Delete a server
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /servers/{serverId}/leave:
+    post:
+      operationId: leaveServer
+      tags: [servers]
+      summary: Leave a server
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Left server
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /servers/{serverId}/summary:
+    get:
+      operationId: getServerSummary
+      tags: [servers]
+      summary: Get server summary stats (members online, total messages, boost level)
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Server summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerSummary"
+
+  # ─── CHANNELS ────────────────────────────────────────────────────────────────
+  /servers/{serverId}/channels:
+    get:
+      operationId: listChannels
+      tags: [channels]
+      summary: List channels in a server
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Channels list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Channel"
+    post:
+      operationId: createChannel
+      tags: [channels]
+      summary: Create a channel
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChannelInput"
+      responses:
+        "201":
+          description: Created channel
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Channel"
+
+  /channels/{channelId}:
+    get:
+      operationId: getChannel
+      tags: [channels]
+      summary: Get channel details
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Channel details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Channel"
+    patch:
+      operationId: updateChannel
+      tags: [channels]
+      summary: Update channel
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChannelUpdate"
+      responses:
+        "200":
+          description: Updated channel
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Channel"
+    delete:
+      operationId: deleteChannel
+      tags: [channels]
+      summary: Delete channel
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /channels/{channelId}/pins:
+    get:
+      operationId: listPinnedMessages
+      tags: [channels]
+      summary: List pinned messages in a channel
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Pinned messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+
+  # ─── MESSAGES ────────────────────────────────────────────────────────────────
+  /channels/{channelId}/messages:
+    get:
+      operationId: listMessages
+      tags: [messages]
+      summary: List messages in a channel (latest 50)
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+    post:
+      operationId: createMessage
+      tags: [messages]
+      summary: Send a message
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageInput"
+      responses:
+        "201":
+          description: Sent message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+  /messages/{messageId}:
+    patch:
+      operationId: updateMessage
+      tags: [messages]
+      summary: Edit a message
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageUpdate"
+      responses:
+        "200":
+          description: Updated message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+    delete:
+      operationId: deleteMessage
+      tags: [messages]
+      summary: Delete a message
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /messages/{messageId}/pin:
+    post:
+      operationId: pinMessage
+      tags: [messages]
+      summary: Pin a message
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Pinned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+    delete:
+      operationId: unpinMessage
+      tags: [messages]
+      summary: Unpin a message
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Unpinned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /messages/{messageId}/reactions/{emoji}:
+    post:
+      operationId: addReaction
+      tags: [messages]
+      summary: Add reaction to message
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: emoji
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Reacted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+    delete:
+      operationId: removeReaction
+      tags: [messages]
+      summary: Remove reaction from message
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: emoji
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /channels/{channelId}/search:
+    get:
+      operationId: searchMessages
+      tags: [messages]
+      summary: Search messages in a channel
+      parameters:
+        - name: channelId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+
+  # ─── MEMBERS ─────────────────────────────────────────────────────────────────
+  /servers/{serverId}/members:
+    get:
+      operationId: listMembers
+      tags: [members]
+      summary: List server members
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Members list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Member"
+
+  /servers/{serverId}/members/{userId}:
+    patch:
+      operationId: updateMember
+      tags: [members]
+      summary: Update member (nickname, roles)
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberUpdate"
+      responses:
+        "200":
+          description: Updated member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+    delete:
+      operationId: kickMember
+      tags: [members]
+      summary: Kick a member
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Kicked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /servers/{serverId}/bans/{userId}:
+    post:
+      operationId: banMember
+      tags: [members]
+      summary: Ban a member
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Banned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+    delete:
+      operationId: unbanMember
+      tags: [members]
+      summary: Unban a member
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Unbanned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  # ─── ROLES ───────────────────────────────────────────────────────────────────
+  /servers/{serverId}/roles:
+    get:
+      operationId: listRoles
+      tags: [roles]
+      summary: List server roles
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Roles list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Role"
+    post:
+      operationId: createRole
+      tags: [roles]
+      summary: Create a role
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleInput"
+      responses:
+        "201":
+          description: Created role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Role"
+
+  /servers/{serverId}/roles/{roleId}:
+    patch:
+      operationId: updateRole
+      tags: [roles]
+      summary: Update a role
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleUpdate"
+      responses:
+        "200":
+          description: Updated role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Role"
+    delete:
+      operationId: deleteRole
+      tags: [roles]
+      summary: Delete a role
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  # ─── DMS ─────────────────────────────────────────────────────────────────────
+  /dms:
+    get:
+      operationId: listDMs
+      tags: [dms]
+      summary: List all DM conversations
+      responses:
+        "200":
+          description: DM list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DMChannel"
+    post:
+      operationId: openDM
+      tags: [dms]
+      summary: Open or get a DM with a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DMInput"
+      responses:
+        "200":
+          description: DM channel
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DMChannel"
+
+  /dms/{dmId}/messages:
+    get:
+      operationId: listDMMessages
+      tags: [dms]
+      summary: List messages in a DM (latest 50)
+      parameters:
+        - name: dmId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: DM messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+    post:
+      operationId: sendDMMessage
+      tags: [dms]
+      summary: Send a DM message
+      parameters:
+        - name: dmId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageInput"
+      responses:
+        "201":
+          description: Sent message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+
+  # ─── FRIENDS ─────────────────────────────────────────────────────────────────
+  /friends:
+    get:
+      operationId: listFriends
+      tags: [friends]
+      summary: List friends and friend requests
+      responses:
+        "200":
+          description: Friends list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FriendsData"
+
+  /friends/add:
+    post:
+      operationId: sendFriendRequest
+      tags: [friends]
+      summary: Send a friend request by username
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FriendRequestInput"
+      responses:
+        "200":
+          description: Request sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /friends/{userId}/accept:
+    post:
+      operationId: acceptFriendRequest
+      tags: [friends]
+      summary: Accept a friend request
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /friends/{userId}/decline:
+    post:
+      operationId: declineFriendRequest
+      tags: [friends]
+      summary: Decline a friend request
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Declined
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /friends/{userId}:
+    delete:
+      operationId: removeFriend
+      tags: [friends]
+      summary: Remove a friend
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /friends/{userId}/block:
+    post:
+      operationId: blockUser
+      tags: [friends]
+      summary: Block a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Blocked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  # ─── INVITES ─────────────────────────────────────────────────────────────────
+  /servers/{serverId}/invites:
+    get:
+      operationId: listInvites
+      tags: [invites]
+      summary: List invites for a server
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Invites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invite"
+    post:
+      operationId: createInvite
+      tags: [invites]
+      summary: Create an invite
+      parameters:
+        - name: serverId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InviteInput"
+      responses:
+        "201":
+          description: Created invite
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invite"
+
+  /invites/{code}:
+    get:
+      operationId: getInvite
+      tags: [invites]
+      summary: Get invite details by code
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Invite details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invite"
+
+  /invites/{code}/use:
+    post:
+      operationId: useInvite
+      tags: [invites]
+      summary: Join server via invite code
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Joined
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Server"
+
+  # ─── ACTIVITY ────────────────────────────────────────────────────────────────
+  /me/activity:
+    get:
+      operationId: getMyActivity
+      tags: [auth]
+      summary: Get unread counts and recent activity across all servers
+      responses:
+        "200":
+          description: Activity summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActivitySummary"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +1164,670 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
+
+    # ─── AUTH ─────────────────────────────────────────────────────────────────
+    RegisterInput:
+      type: object
+      required: [email, username, password]
+      properties:
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+          minLength: 2
+          maxLength: 32
+        password:
+          type: string
+          minLength: 8
+        displayName:
+          type: string
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      required: [token, user]
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+
+    UserUpdate:
+      type: object
+      properties:
+        displayName:
+          type: string
+        bio:
+          type: ["string", "null"]
+        avatarUrl:
+          type: ["string", "null"]
+        bannerUrl:
+          type: ["string", "null"]
+        accentColor:
+          type: ["string", "null"]
+
+    StatusUpdate:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [online, idle, dnd, invisible]
+        customStatus:
+          type: ["string", "null"]
+        customStatusEmoji:
+          type: ["string", "null"]
+
+    # ─── USER ─────────────────────────────────────────────────────────────────
+    User:
+      type: object
+      required: [id, username, discriminator, status, createdAt]
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        discriminator:
+          type: string
+        displayName:
+          type: ["string", "null"]
+        email:
+          type: ["string", "null"]
+        avatarUrl:
+          type: ["string", "null"]
+        bannerUrl:
+          type: ["string", "null"]
+        accentColor:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [online, idle, dnd, invisible, offline]
+        customStatus:
+          type: ["string", "null"]
+        customStatusEmoji:
+          type: ["string", "null"]
+        isNitro:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    # ─── SERVER ───────────────────────────────────────────────────────────────
+    Server:
+      type: object
+      required: [id, name, ownerId, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        iconUrl:
+          type: ["string", "null"]
+        bannerUrl:
+          type: ["string", "null"]
+        ownerId:
+          type: integer
+        isPublic:
+          type: boolean
+        memberCount:
+          type: integer
+        boostLevel:
+          type: integer
+        boostCount:
+          type: integer
+        vanityUrl:
+          type: ["string", "null"]
+        verificationLevel:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    ServerDetail:
+      type: object
+      required: [id, name, ownerId, createdAt, channels, roles]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        iconUrl:
+          type: ["string", "null"]
+        bannerUrl:
+          type: ["string", "null"]
+        ownerId:
+          type: integer
+        isPublic:
+          type: boolean
+        memberCount:
+          type: integer
+        boostLevel:
+          type: integer
+        boostCount:
+          type: integer
+        vanityUrl:
+          type: ["string", "null"]
+        verificationLevel:
+          type: integer
+        channels:
+          type: array
+          items:
+            $ref: "#/components/schemas/Channel"
+        roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Role"
+        createdAt:
+          type: string
+          format: date-time
+
+    ServerInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+        description:
+          type: string
+        iconUrl:
+          type: string
+        isPublic:
+          type: boolean
+
+    ServerUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        iconUrl:
+          type: ["string", "null"]
+        bannerUrl:
+          type: ["string", "null"]
+        isPublic:
+          type: boolean
+        vanityUrl:
+          type: ["string", "null"]
+        verificationLevel:
+          type: integer
+
+    ServerSummary:
+      type: object
+      required: [serverId, onlineCount, totalMembers, totalMessages, boostLevel, boostCount]
+      properties:
+        serverId:
+          type: integer
+        onlineCount:
+          type: integer
+        totalMembers:
+          type: integer
+        totalMessages:
+          type: integer
+        boostLevel:
+          type: integer
+        boostCount:
+          type: integer
+
+    # ─── CHANNEL ──────────────────────────────────────────────────────────────
+    Channel:
+      type: object
+      required: [id, serverId, name, type, position, createdAt]
+      properties:
+        id:
+          type: integer
+        serverId:
+          type: integer
+        parentId:
+          type: ["integer", "null"]
+        name:
+          type: string
+        topic:
+          type: ["string", "null"]
+        type:
+          type: string
+          enum: [text, voice, stage, forum, announcement, category]
+        position:
+          type: integer
+        slowmode:
+          type: integer
+        nsfw:
+          type: boolean
+        userLimit:
+          type: ["integer", "null"]
+        bitrate:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+          format: date-time
+
+    ChannelInput:
+      type: object
+      required: [name, type]
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [text, voice, stage, forum, announcement, category]
+        topic:
+          type: string
+        parentId:
+          type: integer
+        position:
+          type: integer
+        slowmode:
+          type: integer
+
+    ChannelUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        topic:
+          type: ["string", "null"]
+        position:
+          type: integer
+        slowmode:
+          type: integer
+        nsfw:
+          type: boolean
+        parentId:
+          type: ["integer", "null"]
+
+    # ─── MESSAGE ──────────────────────────────────────────────────────────────
+    Message:
+      type: object
+      required: [id, channelId, authorId, content, createdAt]
+      properties:
+        id:
+          type: integer
+        channelId:
+          type: integer
+        authorId:
+          type: integer
+        author:
+          $ref: "#/components/schemas/User"
+        content:
+          type: string
+        editedAt:
+          type: ["string", "null"]
+        isPinned:
+          type: boolean
+        replyToId:
+          type: ["integer", "null"]
+        replyTo:
+          $ref: "#/components/schemas/MessageSnippet"
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Attachment"
+        reactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Reaction"
+        embeds:
+          type: array
+          items:
+            $ref: "#/components/schemas/Embed"
+        mentions:
+          type: array
+          items:
+            type: integer
+        mentionsEveryone:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    MessageSnippet:
+      type: object
+      required: [id, authorId, content]
+      properties:
+        id:
+          type: integer
+        authorId:
+          type: integer
+        author:
+          $ref: "#/components/schemas/User"
+        content:
+          type: string
+
+    MessageInput:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        replyToId:
+          type: integer
+        attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/AttachmentInput"
+        mentions:
+          type: array
+          items:
+            type: integer
+        mentionsEveryone:
+          type: boolean
+
+    MessageUpdate:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+          minLength: 1
+          maxLength: 4000
+
+    Attachment:
+      type: object
+      required: [id, url, filename, contentType, size]
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+        filename:
+          type: string
+        contentType:
+          type: string
+        size:
+          type: integer
+        width:
+          type: ["integer", "null"]
+        height:
+          type: ["integer", "null"]
+
+    AttachmentInput:
+      type: object
+      required: [url, filename, contentType, size]
+      properties:
+        url:
+          type: string
+        filename:
+          type: string
+        contentType:
+          type: string
+        size:
+          type: integer
+        width:
+          type: integer
+        height:
+          type: integer
+
+    Reaction:
+      type: object
+      required: [emoji, count, userIds]
+      properties:
+        emoji:
+          type: string
+        count:
+          type: integer
+        userIds:
+          type: array
+          items:
+            type: integer
+        me:
+          type: boolean
+
+    Embed:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        url:
+          type: ["string", "null"]
+        color:
+          type: ["integer", "null"]
+        imageUrl:
+          type: ["string", "null"]
+        thumbnailUrl:
+          type: ["string", "null"]
+        authorName:
+          type: ["string", "null"]
+        footerText:
+          type: ["string", "null"]
+
+    # ─── MEMBER ───────────────────────────────────────────────────────────────
+    Member:
+      type: object
+      required: [userId, serverId, joinedAt]
+      properties:
+        userId:
+          type: integer
+        serverId:
+          type: integer
+        nickname:
+          type: ["string", "null"]
+        roles:
+          type: array
+          items:
+            type: integer
+        user:
+          $ref: "#/components/schemas/User"
+        joinedAt:
+          type: string
+          format: date-time
+
+    MemberUpdate:
+      type: object
+      properties:
+        nickname:
+          type: ["string", "null"]
+        roles:
+          type: array
+          items:
+            type: integer
+
+    # ─── ROLE ─────────────────────────────────────────────────────────────────
+    Role:
+      type: object
+      required: [id, serverId, name, color, position, createdAt]
+      properties:
+        id:
+          type: integer
+        serverId:
+          type: integer
+        name:
+          type: string
+        color:
+          type: string
+        position:
+          type: integer
+        hoist:
+          type: boolean
+        mentionable:
+          type: boolean
+        permissions:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    RoleInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+        hoist:
+          type: boolean
+        mentionable:
+          type: boolean
+        permissions:
+          type: integer
+
+    RoleUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+        hoist:
+          type: boolean
+        mentionable:
+          type: boolean
+        permissions:
+          type: integer
+        position:
+          type: integer
+
+    # ─── DM ───────────────────────────────────────────────────────────────────
+    DMChannel:
+      type: object
+      required: [id, type, participants, createdAt]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [dm, group_dm]
+        name:
+          type: ["string", "null"]
+        iconUrl:
+          type: ["string", "null"]
+        participants:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        lastMessageAt:
+          type: ["string", "null"]
+        lastMessage:
+          $ref: "#/components/schemas/MessageSnippet"
+        createdAt:
+          type: string
+          format: date-time
+
+    DMInput:
+      type: object
+      required: [recipientId]
+      properties:
+        recipientId:
+          type: integer
+
+    # ─── FRIEND ───────────────────────────────────────────────────────────────
+    FriendsData:
+      type: object
+      required: [friends, incoming, outgoing, blocked]
+      properties:
+        friends:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        incoming:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        outgoing:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        blocked:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+
+    FriendRequestInput:
+      type: object
+      required: [username]
+      properties:
+        username:
+          type: string
+
+    # ─── INVITE ───────────────────────────────────────────────────────────────
+    Invite:
+      type: object
+      required: [code, serverId, inviterId, createdAt]
+      properties:
+        code:
+          type: string
+        serverId:
+          type: integer
+        server:
+          $ref: "#/components/schemas/Server"
+        channelId:
+          type: ["integer", "null"]
+        inviterId:
+          type: integer
+        inviter:
+          $ref: "#/components/schemas/User"
+        uses:
+          type: integer
+        maxUses:
+          type: ["integer", "null"]
+        expiresAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+
+    InviteInput:
+      type: object
+      properties:
+        channelId:
+          type: integer
+        maxUses:
+          type: integer
+        expiresInHours:
+          type: integer
+
+    # ─── ACTIVITY ─────────────────────────────────────────────────────────────
+    ActivitySummary:
+      type: object
+      required: [unreadChannels, unreadDMs, mentionCount]
+      properties:
+        unreadChannels:
+          type: array
+          items:
+            type: integer
+        unreadDMs:
+          type: array
+          items:
+            type: integer
+        mentionCount:
+          type: integer
+        onlineFriendCount:
+          type: integer

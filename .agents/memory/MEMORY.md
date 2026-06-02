@@ -1,0 +1,1 @@
+- [DisClone architecture](disclone-arch.md) — JWT auth, Socket.io path, Orval TQ5 quirk, lib build order.
