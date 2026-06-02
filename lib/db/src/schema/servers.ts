@@ -9,6 +9,7 @@ export const serversTable = pgTable("servers", {
   iconUrl: text("icon_url"),
   bannerUrl: text("banner_url"),
   ownerId: integer("owner_id").notNull(),
+  inviteCode: text("invite_code"),
   isPublic: boolean("is_public").notNull().default(false),
   boostLevel: integer("boost_level").notNull().default(0),
   boostCount: integer("boost_count").notNull().default(0),

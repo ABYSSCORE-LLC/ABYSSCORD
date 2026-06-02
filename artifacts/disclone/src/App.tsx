@@ -12,6 +12,7 @@ import { initSocket, disconnectSocket } from "./lib/socket";
 // Pages
 import Login from "@/pages/login";
 import Register from "@/pages/register";
+import CreateServerPage from "@/pages/create-server";
 import MainLayout from "@/components/layout/main-layout";
 
 const queryClient = new QueryClient({
@@ -90,14 +91,19 @@ function Router() {
     <Switch>
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
-      
+
       {/* Protected routes wrapped in MainLayout */}
-      <Route path="/">
+      <Route path="/app/servers/new">
+        <ProtectedRoute>
+          <CreateServerPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/app/:rest*">
         <ProtectedRoute>
           <MainLayout />
         </ProtectedRoute>
       </Route>
-      <Route path="/app/:rest*">
+      <Route path="/">
         <ProtectedRoute>
           <MainLayout />
         </ProtectedRoute>

@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { useLocation, Route, Switch } from "wouter";
 import { useStore } from "@/store/useStore";
 import { useListMyServers } from "@workspace/api-client-react";
-import { MessageSquare, Plus, Compass, Settings } from "lucide-react";
+import { MessageSquare, Plus, Compass } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
 
 import DMPanel from "./dm-panel";
 import ServerPanel from "./server-panel";
@@ -13,7 +11,6 @@ import ServerPanel from "./server-panel";
 import FriendsPage from "@/pages/friends";
 import ChannelPage from "@/pages/channel";
 import DMPage from "@/pages/dm";
-import CreateServerDialog from "@/components/dialogs/create-server";
 
 function DiscoverView() {
   return (
@@ -33,7 +30,7 @@ function EmptyChannel() {
   );
 }
 
-function ServerRail({ onCreateServer }: { onCreateServer: () => void }) {
+function ServerRail() {
   const [location, setLocation] = useLocation();
   const { data: servers = [] } = useListMyServers();
   const selectedServerId = useStore((state) => state.selectedServerId);
@@ -121,7 +118,7 @@ function ServerRail({ onCreateServer }: { onCreateServer: () => void }) {
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            onClick={onCreateServer}
+            onClick={() => setLocation("/app/servers/new")}
             className="w-12 h-12 flex items-center justify-center text-green-500 bg-background hover:bg-green-500 hover:text-white rounded-[24px] hover:rounded-[16px] transition-all duration-200"
           >
             <Plus className="w-6 h-6" />
@@ -154,16 +151,14 @@ function ServerRail({ onCreateServer }: { onCreateServer: () => void }) {
 export default function MainLayout() {
   const token = useStore((state) => state.token);
   const selectedServerId = useStore((state) => state.selectedServerId);
-  const [createServerOpen, setCreateServerOpen] = useState(false);
 
   if (!token) {
     return null;
   }
 
   return (
-    <>
-      <div className="flex h-screen w-full overflow-hidden bg-background">
-        <ServerRail onCreateServer={() => setCreateServerOpen(true)} />
+    <div className="flex h-screen w-full overflow-hidden bg-background">
+      <ServerRail />
 
         {/* Second panel: DM list or Server channel list */}
         {selectedServerId ? (
@@ -204,12 +199,6 @@ export default function MainLayout() {
             </div>
           </>
         )}
-      </div>
-
-      <CreateServerDialog
-        open={createServerOpen}
-        onOpenChange={setCreateServerOpen}
-      />
-    </>
+    </div>
   );
 }
