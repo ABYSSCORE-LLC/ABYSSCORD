@@ -1,0 +1,48 @@
+Fix and fully implement the Settings system in DisClone using the provided screenshots as exact reference.
+
+PROBLEM FIX:
+The Settings gear icon (bottom left user area) currently has no triggers/functions — make it fully clickable.
+On click: Open a large modal or sliding panel (exact Discord style: dark backdrop, left sidebar navigation, main content area on right, close X button top right).
+
+REPLICATE DISCORD SETTINGS PAGE EXACTLY (from screenshots):
+Left sidebar navigation with categories:
+Account (highlighted when active)
+Password & Security
+Account Standing
+Family Center
+Content & Social
+Data & Privacy
+Authorized Apps
+Connections
+Notifications
+Billing / Nitro / Server Boost / Subscriptions / Gift Inventory
+Experience: Voice & Video, Appearance (with NEW badge), Accessibility, Keybinds, Language & Time
+Activity / Activity Privacy
+Developer (with Kettu/Plugins/Themes as before)
+Changelog, Cloud, Backup & Restore
+Log Out (red/pink at bottom)
+
+Account Tab (main focus from screenshots):
+Top: User avatar + "Lola" style name + "Edit Profiles"
+Account Info section: Username (with Edit button), Email (masked with Reveal/Edit, @gmail.com only), Phone Number (Add/Edit)
+Password & Security: Password Edit, Multi-Factor Authentication (Set up / Manage with QR code), Logged-in Devices (show 3 devices example, with logout options)
+All buttons must be functional: Edit opens inline forms or modals for updating username/email/password, 2FA toggles with QR code generation, device management.
+
+FULL INTERACTIVITY & FUNCTIONS:
+Every sidebar item must be clickable and switch the right content area dynamically (use React state / tabs).
+All "Edit", "Set up", "Add", "Reveal" buttons trigger real modals/forms with save functionality (update DB in real-time via Socket.io).
+Log Out button: Full session termination + redirect to login.
+Disable/Delete Account links at bottom with confirmation modals (tie
+into previous admin/blacklist features).
+Search bar at top of settings works (filters sidebar or content).
+Make it responsive: On mobile, full-screen slide-up panel.
+
+INTEGRATION WITH EXISTING:
+Respect Gmail-only restriction, 2FA, bot system, admin panel.
+Real-time updates: Changing username/avatar instantly reflects in sidebar/chat.
+Use Framer Motion for smooth open/close animations matching Discord.
+Pre-populate with demo data like "hello.chat_haha" username and masked Gmail.
+
+Update router, components, and state management immediately. Test the full flow: Click gear → Settings opens → Navigate tabs → Edit username → Save works without errors.
+
+Output the updated code for the settings component and confirm functionality.

@@ -96,7 +96,9 @@ export const GetMeResponse = zod.object({
  * @summary Update current user profile
  */
 export const UpdateMeBody = zod.object({
+  "username": zod.string().optional(),
   "displayName": zod.string().optional(),
+  "email": zod.string().optional(),
   "bio": zod.string().nullish(),
   "avatarUrl": zod.string().nullish(),
   "bannerUrl": zod.string().nullish(),
@@ -118,6 +120,19 @@ export const UpdateMeResponse = zod.object({
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Change current user password
+ */
+export const ChangePasswordBody = zod.object({
+  "currentPassword": zod.string(),
+  "newPassword": zod.string()
+})
+
+export const ChangePasswordResponse = zod.object({
+  "success": zod.boolean().optional()
 })
 
 
