@@ -146,34 +146,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/User"
 
-  /auth/me/password:
-    patch:
-      operationId: changePassword
-      tags: [auth]
-      summary: Change current user password
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PasswordChange"
-      responses:
-        "200":
-          description: Password changed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-
   /auth/me/status:
     patch:
       operationId: updateMyStatus
@@ -1247,11 +1219,7 @@ components:
     UserUpdate:
       type: object
       properties:
-        username:
-          type: string
         displayName:
-          type: string
-        email:
           type: string
         bio:
           type: ["string", "null"]
@@ -1261,15 +1229,6 @@ components:
           type: ["string", "null"]
         accentColor:
           type: ["string", "null"]
-
-    PasswordChange:
-      type: object
-      required: [currentPassword, newPassword]
-      properties:
-        currentPassword:
-          type: string
-        newPassword:
-          type: string
 
     StatusUpdate:
       type: object

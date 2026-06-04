@@ -22,7 +22,6 @@ import type {
 import type {
   ActivitySummary,
   AuthResponse,
-  ChangePassword200,
   Channel,
   ChannelInput,
   ChannelUpdate,
@@ -41,7 +40,6 @@ import type {
   Message,
   MessageInput,
   MessageUpdate,
-  PasswordChange,
   RegisterInput,
   Role,
   RoleInput,
@@ -504,77 +502,6 @@ export const useUpdateMe = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getUpdateMeMutationOptions(options));
-    }
-
-export const getChangePasswordUrl = () => {
-
-
-
-
-  return `/api/auth/me/password`
-}
-
-/**
- * @summary Change current user password
- */
-export const changePassword = async (passwordChange: PasswordChange, options?: RequestInit): Promise<ChangePassword200> => {
-
-  return customFetch<ChangePassword200>(getChangePasswordUrl(),
-  {
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      passwordChange,)
-  }
-);}
-
-
-
-
-export const getChangePasswordMutationOptions = <TError = ErrorType<ErrorResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePassword>>, TError,{data: BodyType<PasswordChange>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof changePassword>>, TError,{data: BodyType<PasswordChange>}, TContext> => {
-
-const mutationKey = ['changePassword'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof changePassword>>, {data: BodyType<PasswordChange>}> = (props) => {
-          const {data} = props ?? {};
-
-          return  changePassword(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type ChangePasswordMutationResult = NonNullable<Awaited<ReturnType<typeof changePassword>>>
-    export type ChangePasswordMutationBody = BodyType<PasswordChange>
-    export type ChangePasswordMutationError = ErrorType<ErrorResponse>
-
-    /**
- * @summary Change current user password
- */
-export const useChangePassword = <TError = ErrorType<ErrorResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof changePassword>>, TError,{data: BodyType<PasswordChange>}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof changePassword>>,
-        TError,
-        {data: BodyType<PasswordChange>},
-        TContext
-      > => {
-      return useMutation(getChangePasswordMutationOptions(options));
     }
 
 export const getUpdateMyStatusUrl = () => {

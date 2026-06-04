@@ -52,42 +52,19 @@ router.get("/servers/discover", requireAuth, async (req, res): Promise<void> => 
   res.json(servers);
 });
 
-function generateInviteCode(): string {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let code = "";
-  for (let i = 0; i < 8; i++) {
-    code += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return code;
-}
-
 router.post("/servers", requireAuth, async (req, res): Promise<void> => {
   const userId = getUserId(req);
   const { name, description, iconUrl, isPublic } = req.body;
-  if (!name || typeof name !== "string") {
-    res.status(400).json({ error: "Name is required" }); return;
-  }
-  const trimmed = name.trim();
-  if (trimmed.length < 2 || trimmed.length > 100) {
-    res.status(400).json({ error: "Server name must be between 2 and 100 characters" }); return;
-  }
-
-  const inviteCode = generateInviteCode();
+  if (!name) { res.status(400).json({ error: "Name required" }); return; }
   const [server] = await db.insert(serversTable).values({
-    name: trimmed, description, iconUrl, inviteCode, isPublic: isPublic ?? false, ownerId: userId,
+    name, description, iconUrl, isPublic: isPublic ?? false, ownerId: userId,
   }).returning();
-
   // Auto-create general channel
   await db.insert(channelsTable).values({ serverId: server.id, name: "general", type: "text", position: 0 });
   // Auto-create @everyone role
   await db.insert(rolesTable).values({ serverId: server.id, name: "@everyone", color: "#99aab5", position: 0, permissions: 104324673 });
-  // Auto-create Admin role
-  const [adminRole] = await db.insert(rolesTable).values({
-    serverId: server.id, name: "Admin", color: "#ED4245", position: 1, permissions: 2147483647, hoist: true,
-  }).returning();
-  // Join as owner with Admin role
-  await db.insert(membersTable).values({ userId, serverId: server.id, roles: [adminRole.id] });
-
+  // Join as owner
+  await db.insert(membersTable).values({ userId, serverId: server.id });
   res.status(201).json({ ...server, memberCount: 1 });
 });
 

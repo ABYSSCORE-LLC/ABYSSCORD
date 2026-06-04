@@ -76,9 +76,7 @@ export interface AuthResponse {
 }
 
 export interface UserUpdate {
-  username?: string;
   displayName?: string;
-  email?: string;
   /** @nullable */
   bio?: string | null;
   /** @nullable */
@@ -87,11 +85,6 @@ export interface UserUpdate {
   bannerUrl?: string | null;
   /** @nullable */
   accentColor?: string | null;
-}
-
-export interface PasswordChange {
-  currentPassword: string;
-  newPassword: string;
 }
 
 export type StatusUpdateStatus = typeof StatusUpdateStatus[keyof typeof StatusUpdateStatus];
@@ -456,10 +449,6 @@ export interface ActivitySummary {
   mentionCount: number;
   onlineFriendCount?: number;
 }
-
-export type ChangePassword200 = {
-  success?: boolean;
-};
 
 export type DiscoverServersParams = {
 q?: string;

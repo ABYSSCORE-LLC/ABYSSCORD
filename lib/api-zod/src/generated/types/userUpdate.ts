@@ -7,9 +7,7 @@
  */
 
 export interface UserUpdate {
-  username?: string;
   displayName?: string;
-  email?: string;
   /** @nullable */
   bio?: string | null;
   /** @nullable */

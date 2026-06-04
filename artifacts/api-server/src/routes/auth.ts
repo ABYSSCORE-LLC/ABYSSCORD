@@ -72,55 +72,12 @@ router.get("/auth/me", requireAuth, async (req, res): Promise<void> => {
 
 router.patch("/auth/me/update", requireAuth, async (req, res): Promise<void> => {
   const userId = getUserId(req);
-  const { username, email, displayName, bio, avatarUrl, bannerUrl, accentColor } = req.body;
-
-  if (username !== undefined) {
-    if (typeof username !== "string" || username.trim().length < 2 || username.trim().length > 32) {
-      res.status(400).json({ error: "Username must be between 2 and 32 characters" }); return;
-    }
-  }
-  if (email !== undefined) {
-    if (typeof email !== "string" || !email.includes("@")) {
-      res.status(400).json({ error: "Invalid email address" }); return;
-    }
-    const [existingEmail] = await db.select().from(usersTable).where(and(eq(usersTable.email, email)));
-    if (existingEmail && existingEmail.id !== userId) {
-      res.status(400).json({ error: "Email already in use" }); return;
-    }
-  }
-
-  const updates: Partial<typeof usersTable.$inferInsert> = {};
-  if (username !== undefined) updates.username = username.trim();
-  if (email !== undefined) updates.email = email.trim();
-  if (displayName !== undefined) updates.displayName = displayName;
-  if (bio !== undefined) updates.bio = bio;
-  if (avatarUrl !== undefined) updates.avatarUrl = avatarUrl;
-  if (bannerUrl !== undefined) updates.bannerUrl = bannerUrl;
-  if (accentColor !== undefined) updates.accentColor = accentColor;
-
+  const { displayName, bio, avatarUrl, bannerUrl, accentColor } = req.body;
   const [user] = await db.update(usersTable)
-    .set(updates)
+    .set({ displayName, bio, avatarUrl, bannerUrl, accentColor })
     .where(eq(usersTable.id, userId))
     .returning();
   res.json(formatUser(user));
-});
-
-router.patch("/auth/me/password", requireAuth, async (req, res): Promise<void> => {
-  const userId = getUserId(req);
-  const { currentPassword, newPassword } = req.body;
-  if (!currentPassword || !newPassword) {
-    res.status(400).json({ error: "Both current and new password are required" }); return;
-  }
-  if (newPassword.length < 8) {
-    res.status(400).json({ error: "New password must be at least 8 characters" }); return;
-  }
-  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
-  if (!user) { res.status(404).json({ error: "User not found" }); return; }
-  const valid = await bcrypt.compare(currentPassword, user.passwordHash);
-  if (!valid) { res.status(400).json({ error: "Current password is incorrect" }); return; }
-  const newHash = await bcrypt.hash(newPassword, 10);
-  await db.update(usersTable).set({ passwordHash: newHash }).where(eq(usersTable.id, userId));
-  res.json({ success: true });
 });
 
 router.patch("/auth/me/status", requireAuth, async (req, res): Promise<void> => {
