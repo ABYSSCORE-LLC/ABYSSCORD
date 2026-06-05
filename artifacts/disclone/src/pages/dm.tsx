@@ -2,8 +2,9 @@ import { useRoute } from "wouter";
 import { useListDMs, useListDMMessages, useSendDMMessage } from "@workspace/api-client-react";
 import { useStore } from "@/store/useStore";
 import { useEffect } from "react";
-import { Phone, Video, Search } from "lucide-react";
+import { Phone, Video, Search, Shield } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import MessageList from "@/components/chat/message-list";
 import MessageInput from "@/components/chat/message-input";
 import { getSocket } from "@/lib/socket";
@@ -48,6 +49,8 @@ export default function DMPage() {
       id: m.authorId,
       username: m.author?.username ?? "Unknown",
       avatarUrl: m.author?.avatarUrl,
+      isAdmin: m.author?.isAdmin,
+      showAdminTag: m.author?.showAdminTag,
     },
     createdAt: m.createdAt,
     updatedAt: m.editedAt ?? undefined,
@@ -75,7 +78,15 @@ export default function DMPage() {
             </AvatarFallback>
           </Avatar>
         )}
-        <span className="font-semibold text-sm">{other?.username ?? "DM"}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="font-semibold text-sm">{other?.username ?? "DM"}</span>
+          {other?.isAdmin && other?.showAdminTag && (
+            <Badge className="bg-red-500 text-white border-none text-[10px] h-4 px-1">
+              <Shield className="w-2.5 h-2.5 mr-0.5" />
+              ADMIN
+            </Badge>
+          )}
+        </div>
         <div className="ml-auto flex items-center gap-2">
           <button className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
             <Phone className="w-5 h-5" />

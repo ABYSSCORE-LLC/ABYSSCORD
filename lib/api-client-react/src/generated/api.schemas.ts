@@ -67,6 +67,8 @@ export interface User {
   /** @nullable */
   customStatusEmoji?: string | null;
   isNitro?: boolean;
+  isAdmin?: boolean;
+  showAdminTag?: boolean;
   createdAt: string;
 }
 

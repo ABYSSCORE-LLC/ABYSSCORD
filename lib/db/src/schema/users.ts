@@ -17,6 +17,8 @@ export const usersTable = pgTable("users", {
   customStatus: text("custom_status"),
   customStatusEmoji: text("custom_status_emoji"),
   isNitro: boolean("is_nitro").notNull().default(false),
+  isAdmin: boolean("is_admin").notNull().default(false),
+  showAdminTag: boolean("show_admin_tag").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),
 });

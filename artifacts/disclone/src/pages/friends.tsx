@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, UserPlus, Users, Clock, MessageSquare } from "lucide-react";
+import { Check, X, UserPlus, Users, Clock, MessageSquare, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Tab = "online" | "all" | "pending" | "add";
@@ -200,7 +200,15 @@ export default function FriendsPage() {
                     )} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm truncate">{user.username}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="font-medium text-sm truncate">{user.username}</p>
+                      {user.isAdmin && user.showAdminTag && (
+                        <Badge className="bg-red-500 text-white border-none text-[10px] h-4 px-1">
+                          <Shield className="w-2.5 h-2.5 mr-0.5" />
+                          ADMIN
+                        </Badge>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground capitalize">{user.status}</p>
                   </div>
                   <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

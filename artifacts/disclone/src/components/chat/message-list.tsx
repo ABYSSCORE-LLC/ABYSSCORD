@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface ChatMessage {
@@ -9,6 +11,8 @@ export interface ChatMessage {
     id: number;
     username: string;
     avatarUrl?: string | null;
+    isAdmin?: boolean;
+    showAdminTag?: boolean;
   };
   createdAt: string;
   updatedAt?: string;
@@ -98,6 +102,12 @@ export default function MessageList({ messages, typingUsers = [], className }: M
                       <span className="text-sm font-semibold text-foreground hover:underline cursor-pointer">
                         {msg.author.username}
                       </span>
+                      {msg.author.isAdmin && msg.author.showAdminTag && (
+                        <Badge className="bg-red-500 text-white border-none text-[10px] h-4 px-1">
+                          <Shield className="w-2.5 h-2.5 mr-0.5" />
+                          ADMIN
+                        </Badge>
+                      )}
                       <span className="text-[10px] text-muted-foreground">{formatTime(msg.createdAt)}</span>
                     </div>
                   )}

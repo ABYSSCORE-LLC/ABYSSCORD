@@ -72,9 +72,9 @@ router.get("/auth/me", requireAuth, async (req, res): Promise<void> => {
 
 router.patch("/auth/me/update", requireAuth, async (req, res): Promise<void> => {
   const userId = getUserId(req);
-  const { displayName, bio, avatarUrl, bannerUrl, accentColor } = req.body;
+  const { displayName, bio, avatarUrl, bannerUrl, accentColor, showAdminTag } = req.body;
   const [user] = await db.update(usersTable)
-    .set({ displayName, bio, avatarUrl, bannerUrl, accentColor })
+    .set({ displayName, bio, avatarUrl, bannerUrl, accentColor, showAdminTag })
     .where(eq(usersTable.id, userId))
     .returning();
   res.json(formatUser(user));

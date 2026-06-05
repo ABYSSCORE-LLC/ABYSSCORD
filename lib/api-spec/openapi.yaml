@@ -1274,6 +1274,10 @@ components:
           type: ["string", "null"]
         isNitro:
           type: boolean
+        isAdmin:
+          type: boolean
+        showAdminTag:
+          type: boolean
         createdAt:
           type: string
           format: date-time

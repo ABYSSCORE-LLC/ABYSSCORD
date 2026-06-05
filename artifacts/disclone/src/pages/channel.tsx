@@ -56,6 +56,8 @@ export default function ChannelPage() {
       id: m.authorId,
       username: m.author?.username ?? "Unknown",
       avatarUrl: m.author?.avatarUrl,
+      isAdmin: m.author?.isAdmin,
+      showAdminTag: m.author?.showAdminTag,
     },
     createdAt: m.createdAt,
     updatedAt: m.editedAt ?? undefined,

@@ -8,6 +8,7 @@ import {
 } from "@workspace/api-client-react";
 import { useStore } from "@/store/useStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   ChevronDown,
@@ -16,6 +17,7 @@ import {
   Plus,
   Settings,
   ChevronRight,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserStatusBar from "./user-status-bar";
@@ -177,9 +179,17 @@ export default function ServerPanel({ serverId }: ServerPanelProps) {
                     )}
                   />
                 </div>
-                <span className="text-sm truncate text-muted-foreground group-hover:text-foreground transition-colors">
-                  {m.nickname || m.user?.username}
-                </span>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="text-sm truncate text-muted-foreground group-hover:text-foreground transition-colors">
+                    {m.nickname || m.user?.username}
+                  </span>
+                  {m.user?.isAdmin && m.user?.showAdminTag && (
+                    <Badge className="bg-red-500 text-white border-none text-[10px] h-4 px-1 shrink-0">
+                      <Shield className="w-2.5 h-2.5 mr-0.5" />
+                      ADMIN
+                    </Badge>
+                  )}
+                </div>
               </div>
             ))}
           </ScrollArea>

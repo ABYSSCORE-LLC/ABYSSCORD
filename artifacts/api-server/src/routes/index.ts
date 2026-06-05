@@ -10,6 +10,7 @@ import rolesRouter from "./roles";
 import dmsRouter from "./dms";
 import friendsRouter from "./friends";
 import invitesRouter from "./invites";
+import adminRouter from "./admin";
 
 const router: IRouter = Router();
 
@@ -24,5 +25,6 @@ router.use(rolesRouter);
 router.use(dmsRouter);
 router.use(friendsRouter);
 router.use(invitesRouter);
+router.use(adminRouter);
 
 export default router;

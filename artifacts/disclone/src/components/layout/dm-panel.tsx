@@ -3,7 +3,7 @@ import { useListDMs } from "@workspace/api-client-react";
 import { useStore } from "@/store/useStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Users, Plus } from "lucide-react";
+import { Users, Plus, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import UserStatusBar from "./user-status-bar";
 
@@ -43,6 +43,25 @@ export default function DMPanel() {
           <Users className="w-5 h-5 shrink-0" />
           Friends
         </button>
+
+        {/* Admin Panel */}
+        {currentUser?.isAdmin && (
+          <button
+            onClick={() => {
+              setSelectedDmId(null);
+              setLocation("/app/admin");
+            }}
+            className={cn(
+              "w-full flex items-center gap-3 px-2 py-2 rounded-md text-sm font-medium transition-colors mb-1",
+              location === "/app/admin"
+                ? "bg-red-500/20 text-red-400"
+                : "text-muted-foreground hover:bg-red-500/10 hover:text-red-400"
+            )}
+          >
+            <Shield className="w-5 h-5 shrink-0" />
+            Admin Panel
+          </button>
+        )}
 
         {/* DMs — participants is User[], find the other person */}
         {dms.length > 0 && (

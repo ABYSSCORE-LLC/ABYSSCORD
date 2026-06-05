@@ -13,6 +13,7 @@ import ServerPanel from "./server-panel";
 import FriendsPage from "@/pages/friends";
 import ChannelPage from "@/pages/channel";
 import DMPage from "@/pages/dm";
+import AdminPanel from "@/pages/admin";
 import CreateServerDialog from "@/components/dialogs/create-server";
 
 function DiscoverView() {
@@ -197,6 +198,7 @@ export default function MainLayout() {
                 <Route path="/app/friends" component={FriendsPage} />
                 <Route path="/app/discover" component={DiscoverView} />
                 <Route path="/app/dms/:dmId" component={DMPage} />
+                <Route path="/app/admin" component={AdminPanel} />
                 <Route>
                   <FriendsPage />
                 </Route>

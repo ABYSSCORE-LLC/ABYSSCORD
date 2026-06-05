@@ -58,6 +58,8 @@ export const LoginResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 })
 })
@@ -88,6 +90,8 @@ export const GetMeResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 })
 
@@ -117,6 +121,8 @@ export const UpdateMeResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 })
 
@@ -144,6 +150,8 @@ export const UpdateMyStatusResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 })
 
@@ -169,6 +177,8 @@ export const GetUserResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 })
 
@@ -493,6 +503,8 @@ export const ListPinnedMessagesResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string(),
@@ -516,6 +528,8 @@ export const ListPinnedMessagesResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string()
@@ -578,6 +592,8 @@ export const ListMessagesResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string(),
@@ -601,6 +617,8 @@ export const ListMessagesResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string()
@@ -698,6 +716,8 @@ export const UpdateMessageResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string(),
@@ -721,6 +741,8 @@ export const UpdateMessageResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string()
@@ -844,6 +866,8 @@ export const SearchMessagesResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string(),
@@ -867,6 +891,8 @@ export const SearchMessagesResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string()
@@ -930,6 +956,8 @@ export const ListMembersResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "joinedAt": zod.coerce.date()
@@ -969,6 +997,8 @@ export const UpdateMemberResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "joinedAt": zod.coerce.date()
@@ -1116,6 +1146,8 @@ export const ListDMsResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 })),
   "lastMessageAt": zod.string().nullish(),
@@ -1136,6 +1168,8 @@ export const ListDMsResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string()
@@ -1171,6 +1205,8 @@ export const OpenDMResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 })),
   "lastMessageAt": zod.string().nullish(),
@@ -1191,6 +1227,8 @@ export const OpenDMResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string()
@@ -1224,6 +1262,8 @@ export const ListDMMessagesResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string(),
@@ -1247,6 +1287,8 @@ export const ListDMMessagesResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "content": zod.string()
@@ -1329,6 +1371,8 @@ export const ListFriendsResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 })),
   "incoming": zod.array(zod.object({
@@ -1345,6 +1389,8 @@ export const ListFriendsResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 })),
   "outgoing": zod.array(zod.object({
@@ -1361,6 +1407,8 @@ export const ListFriendsResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 })),
   "blocked": zod.array(zod.object({
@@ -1377,6 +1425,8 @@ export const ListFriendsResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }))
 })
@@ -1483,6 +1533,8 @@ export const ListInvitesResponseItem = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "uses": zod.number().optional(),
@@ -1548,6 +1600,8 @@ export const GetInviteResponse = zod.object({
   "customStatus": zod.string().nullish(),
   "customStatusEmoji": zod.string().nullish(),
   "isNitro": zod.boolean().optional(),
+  "isAdmin": zod.boolean().optional(),
+  "showAdminTag": zod.boolean().optional(),
   "createdAt": zod.coerce.date()
 }).optional(),
   "uses": zod.number().optional(),

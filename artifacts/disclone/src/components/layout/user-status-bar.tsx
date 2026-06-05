@@ -1,6 +1,6 @@
 import { useStore } from "@/store/useStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Mic, Headphones, Settings } from "lucide-react";
+import { Mic, Headphones, Settings, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function UserStatusBar() {
@@ -21,7 +21,14 @@ export default function UserStatusBar() {
           <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-sidebar bg-green-500" />
         </div>
         <div className="min-w-0">
-          <p className="text-xs font-semibold text-foreground truncate">{currentUser.username}</p>
+          <div className="flex items-center gap-1 min-w-0">
+            <p className="text-xs font-semibold text-foreground truncate">{currentUser.username}</p>
+            {currentUser.isAdmin && currentUser.showAdminTag && (
+              <span className="shrink-0 inline-flex items-center gap-0.5 px-1 py-0 rounded bg-red-500 text-white text-[9px] font-bold">
+                <Shield className="w-2.5 h-2.5" />A
+              </span>
+            )}
+          </div>
           <p className="text-xs text-muted-foreground truncate">
             #{currentUser.discriminator}
           </p>
